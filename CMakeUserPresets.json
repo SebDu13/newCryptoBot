@@ -1,0 +1,9 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/Users/seb/workspace/newCryptoBot/conan/CMakePresets.json"
+    ]
+}
