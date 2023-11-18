@@ -9,7 +9,7 @@ PriceWatcher::PriceWatcher(TimeThresholdConfig config)
 : _thresholdPercent(config.priceThresholdPercent)
 , _timeThresholdExtrapoler(config.lowBound, config.highBound)
 {
-    _startTime = std::chrono::high_resolution_clock::now();
+    _startTime = std::chrono::system_clock::now();
 }
 
 // profit: 1.2 for 20% profit
@@ -26,7 +26,7 @@ bool PriceWatcher::isMoving(double price, double profit)
     const double movePercent = abs(price - _previousPrice)/_previousPrice;
     if(price > _previousPrice && movePercent > _thresholdPercent)
     {
-        _startTime = std::chrono::high_resolution_clock::now();
+        _startTime = std::chrono::system_clock::now();
         LOG_DEBUG << "movePercent=" << movePercent << " reset timer. price=" << price << " _previousPrice=" << _previousPrice;
         _previousPrice = price;
     }
@@ -34,7 +34,7 @@ bool PriceWatcher::isMoving(double price, double profit)
     double timeThreshold = _timeThresholdExtrapoler.extrapolate(profit);
     //LOG_DEBUG << "profit=" << profit << " timeThreshold " << timeThreshold << " sec";
 
-    if(auto durationMs = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now()-_startTime).count();
+    if(auto durationMs = std::chrono::duration<double, std::milli>(std::chrono::system_clock::now()-_startTime).count();
          durationMs < ( timeThreshold* 1000))
         return true;
 

@@ -49,8 +49,7 @@ void BotManager::startOnTime()
     std::vector<std::unique_ptr<ListingBot>> listingBots;
     std::vector<std::future<ListingBotStatus>> statusFutures;
 
-    using namespace std::chrono;
-    if(_startTime <= high_resolution_clock::now())
+    if(_startTime <= std::chrono::system_clock::now())
     {
         LOG_ERROR << "Too late.";
         return;
@@ -93,7 +92,7 @@ void BotManager::startOnTime()
 void BotManager::wait()
 {
     while(std::chrono::duration<double, std::micro>(_startTime 
-        - std::chrono::high_resolution_clock::now() 
+        - std::chrono::system_clock::now() 
         - std::chrono::milliseconds(_extraDurationMs)).count() > 0);
 }
 

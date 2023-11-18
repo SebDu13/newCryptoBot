@@ -1,6 +1,6 @@
-#include "exchangeController/ExchangeControllerFactory.hpp"
-#include "exchangeController/GateioController.hpp"
-#include "exchangeController/KucoinController.hpp"
+#include "ExchangeControllerFactory.hpp"
+#include "exchanges/gateiocpp/src/GateioController.hpp"
+#include "exchanges/kucoincpp/src/KucoinController.hpp"
 #include "logger.hpp"
 #include "magic_enum.hpp"
 

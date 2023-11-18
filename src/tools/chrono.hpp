@@ -17,6 +17,6 @@ namespace tools
         const char* fileName;
         const size_t line;
         const char* functionName;
-        std::chrono::_V2::system_clock::time_point startTime;
+        std::chrono::system_clock::time_point startTime;
     };
 }

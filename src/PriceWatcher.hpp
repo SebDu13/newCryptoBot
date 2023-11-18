@@ -16,7 +16,7 @@ class PriceWatcher
     bool isMoving(double price, double profit);
 
     private:
-    std::chrono::_V2::system_clock::time_point _startTime;
+    std::chrono::system_clock::time_point _startTime;
     double _thresholdPercent;
     tools::LinearExtrapoler _timeThresholdExtrapoler;
     bool _previousPriceIsInit = false;

@@ -9,7 +9,7 @@ fileName(fileName),
 line(line),
 functionName(functionName)
 {
-    startTime = std::chrono::high_resolution_clock::now();
+    startTime = std::chrono::system_clock::now();
 }
 
 Chrono::~Chrono()
@@ -17,7 +17,7 @@ Chrono::~Chrono()
     BOOST_LOG_SEV(Logger::log, boost::log::trivial::debug) 
         << LOG_LOCATION_PARAM(fileName, line, functionName) 
         << " executed in "
-        << std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now()-startTime).count() << "ms";
+        << std::chrono::duration<double, std::milli>(std::chrono::system_clock::now()-startTime).count() << "ms";
 }
 
 }

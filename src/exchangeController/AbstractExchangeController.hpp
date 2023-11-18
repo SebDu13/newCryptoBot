@@ -2,7 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include "magic_enum.hpp"
-#include "BotType.hpp"
+#include "../BotType.hpp"
 
 namespace ExchangeController
 {
