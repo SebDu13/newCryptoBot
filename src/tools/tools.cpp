@@ -2,6 +2,7 @@
 #include <sys/ioctl.h>
 #include <sstream>
 #include <iomanip>
+#include <limits>
 #include "tools.hpp"
 
 namespace tools

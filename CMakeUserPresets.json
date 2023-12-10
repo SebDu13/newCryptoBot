@@ -4,6 +4,6 @@
         "conan": {}
     },
     "include": [
-        "/Users/seb/workspace/newCryptoBot/conan/CMakePresets.json"
+        "/home/seb/workspace/newCryptoBot/conan/CMakePresets.json"
     ]
 }
