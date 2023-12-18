@@ -6,17 +6,17 @@
 #include <chrono>
 #include <thread>
 
-/*
-#include "binacpp.h"
-#include "kucoincpp.hpp"
-#include "HuobiApi.hpp"
-#include "exchangeController/GateioController.hpp"
-#include "exchangeController/KucoinController.hpp"
+
+//#include "binacpp.h"
+//#include "kucoincpp.hpp"
+//#include "HuobiApi.hpp"
+//#include "exchanges/gateiocpp/src/GateioController.hpp"
+//#include "exchangeController/KucoinController.hpp"
 #include "exchangeController/ExchangeControllerFactory.hpp"
 #include "magic_enum.hpp"
 #include "ListingBot.hpp"
 #include "BotType.hpp"
-#include "BotManager.hpp"*/
+#include "BotManager.hpp"
 
 #include "logger.hpp"
 #include "BotConfig.hpp"
@@ -31,6 +31,13 @@ int main(int argc, char **argv)
 	Bot::BotConfig botConfig;
 	if(botConfig.loadOptionsFromMain(argc, argv) == Bot::Status::Failure)
 		return -1;
+	
+	if(botConfig.getMode() == Bot::RunningMode::TradingTime)
+	{
+		std::string errorMessage = ExchangeController::ExchangeControllerFactory::create(botConfig)->sendFakeOrder(botConfig.getPairId());
+		std::cout << errorMessage << std::endl;
+		return 0;
+	}
 
 	Logger::init(Logger::FilterLevel::Debug
 		, botConfig.getPairId()
@@ -39,8 +46,9 @@ int main(int argc, char **argv)
 
 	LOG_INFO << botConfig.toString();
 
-	/*Bot::BotManager botmanager(botConfig);
-	botmanager.startOnTime();*/
+	Bot::BotManager botmanager(botConfig);
+	botmanager.startOnTime();
+	
 
 
 	/* *** HUOBI *** */

@@ -84,14 +84,6 @@ Status BotConfig::loadOptionsFromMain(int argc, char **argv)
         return Status::Failure;
     }
 
-    if (vm.count("limitPrice")) 
-        _limitBuyPrice = Price(vm["limitPrice"].as<std::string>());
-    else 
-    {
-        LOG_ERROR << "limitPrice was not set. --help for more details";
-        return Status::Failure;
-    }
-
     if (vm.count("quantity")) 
         _quantity = Quantity(vm["quantity"].as<std::string>());
 
@@ -122,21 +114,6 @@ Status BotConfig::loadOptionsFromMain(int argc, char **argv)
     if (vm.count("maxAmount")) 
         _maxAmount = Quantity(vm["maxAmount"].as<std::string>());
 
-    if (vm.count("startTime")) 
-    {
-        _startTime = vm["startTime"].as<std::string>();
-        if(!checkStartTime(_startTime))
-        {
-            LOG_ERROR << "Wrong startTime format. Should be hh:mm";
-            return Status::Failure;
-        }
-    }
-    else
-    {
-        LOG_ERROR << "startTime was not set. --help for more details";
-        return Status::Failure;
-    }
-
     if(vm.count("mode"))
     {
         if(auto modeOpt = magic_enum::enum_cast<Bot::RunningMode>(vm["mode"].as<std::string>()))
@@ -154,6 +131,29 @@ Status BotConfig::loadOptionsFromMain(int argc, char **argv)
             LOG_ERROR << "invalid mode name. " << printModes();
             return Status::Failure;
         }
+    }
+    
+    if (vm.count("limitPrice")) 
+        _limitBuyPrice = Price(vm["limitPrice"].as<std::string>());
+    else if(_runningMode != Bot::RunningMode::TradingTime) 
+    {
+        LOG_ERROR << "limitPrice was not set. --help for more details";
+        return Status::Failure;
+    }
+    
+    if (vm.count("startTime")) 
+    {
+        _startTime = vm["startTime"].as<std::string>();
+        if(!checkStartTime(_startTime))
+        {
+            LOG_ERROR << "Wrong startTime format. Should be hh:mm";
+            return Status::Failure;
+        }
+    }
+    else if(_runningMode != Bot::RunningMode::TradingTime) 
+    {
+        LOG_ERROR << "startTime was not set. --help for more details";
+        return Status::Failure;
     }
 
     setFixedPointPrecision();
@@ -314,7 +314,7 @@ void BotConfig::setFixedPointPrecision() const
     }
 }
 
-MailConfig BotConfig::getMailConfig() const
+std::optional<MailConfig> BotConfig::getMailConfig() const
 {
     MailConfig mailConfig;
     std::string mailLoginEnv = "MAIL_LOGIN";
@@ -323,12 +323,18 @@ MailConfig BotConfig::getMailConfig() const
     if(auto key = std::getenv(mailLoginEnv.c_str()))
         mailConfig.login = std::string(key);
     else
+    {
         LOG_WARNING << mailLoginEnv << " not set or null";
+        return std::nullopt;
+    }
 
     if(auto key = std::getenv(mailPassWordEnv.c_str()))
         mailConfig.password = std::string(key);
     else
+    {
         LOG_WARNING << mailPassWordEnv << " not set or null";
+        return std::nullopt;
+    }
 
     mailConfig.mailServer = "smtp.gmail.com";
     mailConfig.from  = "<sebcrypto57@gmail.com>";

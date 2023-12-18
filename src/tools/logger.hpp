@@ -1,5 +1,6 @@
 #pragma once
 
+//#define BOOST_LOG_DYN_LINK 1
 #include <boost/log/trivial.hpp>
 
 #define JUST_FILENAME(f) std::max<const char*>(f,\

@@ -121,6 +121,13 @@ OrderResult GateioController::sendOrder(const std::string& currencyPair, const S
         return {status, Quantity(), Quantity(), Quantity(), Quantity()};
 }
 
+std::string GateioController::sendFakeOrder(const std::string& currencyPair) const
+{
+    Json::Value result;
+    _gateIoAPI.send_limit_order(currencyPair, GateIoCPP::Side::buy, GateIoCPP::TimeInForce::ioc, Quantity{"0.00001"}, Price{"0.00001"}, result);
+    return result["message"].asString();
+}
+
 Quantity GateioController::computeMaxQuantity(const Price& price) const
 {
     Json::Value result;
@@ -156,8 +163,8 @@ Quantity GateioController::getSubAccountBalance() const
 {
     Json::Value result;
     _gateIoAPI.getSubAccountBalances(GateioController::subAccountId, result);
-
-    return Quantity(result[0]["available"]["USDT"].asString());
+    const std::string balance = result[0]["available"]["USDT"].asString();
+    return Quantity(balance.empty() ? "0" : balance);
 }
 
 Quantity GateioController::prepareAccount(const Price& price,const std::optional<Quantity>& maxAmountOpt, const std::optional<Quantity>& quantityOpt) const

@@ -117,6 +117,7 @@ class AbstractExchangeController
         virtual TickerResult getSpotTicker(const std::string& currencyPair) const =0;
         virtual std::string getOrderBook(const std::string& currencyPair) const =0;
         virtual OrderResult sendOrder(const std::string& currency_pair, const Side side, const Quantity& quantity, const Price& price) const  =0;
+        virtual std::string sendFakeOrder(const std::string& currency_pair) const {return "Not implemented";};
         virtual Quantity computeMaxQuantity(const Price& price) const=0;
         // the Min order size (amount * price) the exchange accepts. For instance 1 on GateIO
         virtual Quantity getMinOrderSize() const = 0;

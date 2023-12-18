@@ -100,7 +100,8 @@ struct ApiKeys
 enum class RunningMode
 {
     Normal,
-    WatchAndSell
+    WatchAndSell,
+    TradingTime
 };
 
 }

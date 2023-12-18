@@ -43,9 +43,6 @@ BotManager::~BotManager()
 
 void BotManager::startOnTime()
 {
-    auto mailConfig = _config.getMailConfig();
-	tools::Mail mail({mailConfig.mailServer, mailConfig.login, mailConfig.password});
-	
     std::vector<std::unique_ptr<ListingBot>> listingBots;
     std::vector<std::future<ListingBotStatus>> statusFutures;
 
@@ -82,11 +79,16 @@ void BotManager::startOnTime()
     
     LOG_INFO << botsStatus;
 
-    mail.sendmail(mailConfig.from
-        , mailConfig.to
-        , std::string(magic_enum::enum_name(_config.getExchange())) + " --> "
-            + _config.getPairId() + " "
-            + botsStatus.str());
+    
+    if(auto mailConfig = _config.getMailConfig())
+    {
+        tools::Mail mail({mailConfig->mailServer, mailConfig->login, mailConfig->password});
+        mail.sendmail(mailConfig->from
+            , mailConfig->to
+            , std::string(magic_enum::enum_name(_config.getExchange())) + " --> "
+                + _config.getPairId() + " "
+                + botsStatus.str());
+    }
 }
 
 void BotManager::wait()
